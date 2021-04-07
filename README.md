@@ -4,7 +4,7 @@ a french xkcd inspired twitter bot. Searches for any article posted by certain t
 ---
 
 ### Contribution
-feel free to add more words into the substitution dictionary following the following format:
+feel free to add more words into the substitution dictionary with the following format:
 > oldword, newword
 > 
 
