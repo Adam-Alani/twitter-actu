@@ -1,30 +1,48 @@
 package main
 
 import (
-	"fmt"
+	"github.com/dghubble/go-twitter/twitter"
 	"log"
+	"time"
 )
-
 
 func main() {
 
-	creds := Credentials{
-		AccessToken: "3067410923-L2YSMfMZjhyvovPHKKpDQlO3wHxOjiJ7g4amL3e",
-		AccessTokenSecret: "02pkTaSt1uacTzlFuOuUbreU0A8M2SwFvtpGNwEvzprfW",
-
-		ConsumerKey: "54oAqtEdjnzcbLInK5UNHOWoE",
-		ConsumerSecret: "vkDDwkxFuDk9UczyWEkisR4o8nvXwEGsFMN4EG21WRbyrhwRxZ",
-	}
+	username := "BFMTV"
 
 
+	// Initialize creds and client
+	creds := getCredentials()
 	client, err := getClient(&creds)
 	if err != nil {
 		log.Println("Error getting Twitter Client")
 		log.Println(err)
 	}
 
-	latest := fetchLatestTweet(client, "unebrosseadam")
-	fmt.Printf("USER TIMELINE:\n%+v\n", latest)
+	// Initialize first tweet and the substitution library
+	old := fetchLatestTweet(client, username)
+	dict := parseSub("./substitution_dictionary")
 
 
+	// Fetches new tweet every minute
+	for range time.NewTicker(time.Minute).C {
+		latest := mainLoop(old, username, client , dict)
+		old = latest
+	}
+
+}
+
+
+func mainLoop(old , username string, client *twitter.Client, dict []Substitution) string {
+
+	latest := fetchLatestTweet(client, username)
+	if latest != old {
+		modifiedTweet, modifiable := modifyTweet(latest, dict)
+		article, postable := isArticle(latest)
+		if  postable && modifiable {
+			tweetToSend := modifiedTweet + "\n" + article
+			sendTweet(tweetToSend, client)
+		}
+	}
+	return latest
 }

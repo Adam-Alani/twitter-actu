@@ -3,7 +3,9 @@ package main
 import (
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
+	"github.com/joho/godotenv"
 	"log"
+	"os"
 )
 
 type Credentials struct {
@@ -11,6 +13,21 @@ type Credentials struct {
 	ConsumerSecret string
 	AccessToken string
 	AccessTokenSecret string
+}
+
+func getCredentials() Credentials {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+
+	return Credentials{
+		AccessToken: os.Getenv("ACCESS_TOKEN"),
+		AccessTokenSecret:  os.Getenv("ACCESS_SECRET"),
+
+		ConsumerKey:  os.Getenv("CONSUMER_KEY"),
+		ConsumerSecret:  os.Getenv("CONSUMER_SECRET"),
+	}
 }
 
 
@@ -27,13 +44,14 @@ func getClient(creds *Credentials) (*twitter.Client, error) {
 		IncludeEmail: twitter.Bool(true),
 	}
 
-	user, _, err := client.Accounts.VerifyCredentials(verifyParams)
+	_, _, err := client.Accounts.VerifyCredentials(verifyParams)
 	if err != nil {
 		return nil, err
 	}
 
-	log.Printf("User's ACCOUNT:\n%+v\n", user)
+
 	return client, nil
 
-
 }
+
+
