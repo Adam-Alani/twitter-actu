@@ -6,7 +6,8 @@ a french xkcd inspired twitter bot. Searches for any article posted by certain t
 ### Contribution
 feel free to add more words into the substitution dictionary with the following format:
 > oldword, newword
-> 
+
+the point is not to have as many replaced words as possible, but to replace as many heavily used words in the news industry
 
 
 
