@@ -13,4 +13,4 @@ the point is not to have as many replaced words as possible, but to replace as m
 
 
 
-i dont know why im writing this in english even though the project is french
+i dont know why im writing this in english even though the project is french, also, i still need to host this somewhere :/
